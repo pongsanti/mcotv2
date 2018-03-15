@@ -16,6 +16,7 @@ class Import
   def import
     LOG.info "Import to #{filepath}" if LOG
     `import -window #{@window_id} -resize #{resize_arg} #{filepath}`
+    @filename
   end
 
   def resize_arg
