@@ -21,7 +21,7 @@ class Convert
     
     LOG.info "Convert to #{@out_file}"
     `convert #{@fileop.path} -crop #{geometry} -colorspace gray -lat 10x10+5% -negate #{@out_file}`
-    @out_file
+    @fileop.name_suffix(OUT_FILE_SUFFIX)
   end
 
   def geometry

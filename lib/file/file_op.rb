@@ -11,8 +11,12 @@ class FileOp
     "#{FILE_PATH}/#{@filename}"
   end
 
+  def name_suffix(suffix)
+    String.new(@filename).insert(@filename.index('.'), suffix)
+  end
+
   def path_suffix(suffix)
-    String.new(path).insert(path.index('.'), suffix)
+    "#{FILE_PATH}/#{name_suffix(suffix)}"
   end
 
   def delete
