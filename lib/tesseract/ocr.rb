@@ -1,15 +1,14 @@
 require 'file/file_op'
 # ocr op
 class Ocr
-  def initialize(filename)
-    @filename = filename
-    @fileop = FileOp.new(filename)
+  def initialize(fop)
+    @fop = fop
   end
 
   def parse
-    LOG.info "Parsing file: #{@filename} ..."
+    LOG.info "Parsing file: #{@fop.filename} ..."
 
-    parsed = `tesseract #{@fileop.path} -psm 7 stdout`
+    parsed = `tesseract #{@fop.path} -psm 7 stdout`
     res = parsed.strip
 
     LOG.info "OCR got: #{res}"
