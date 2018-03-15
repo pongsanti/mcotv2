@@ -23,7 +23,7 @@ loop do
   # crop
   c = Convert.new(w: F_C_W, h: F_C_H,
                   wo: F_C_WO, ho: F_C_HO,
-                  bo: C_BOT_OFF,
+                  bo: C_BOT_OFF, suffix: '_f',
                   in_filename: origin_fop.filename)
   crop_fop = c.convert
 

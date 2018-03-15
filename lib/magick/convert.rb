@@ -1,8 +1,8 @@
 # convert op
 class Convert
-  OUT_FILE_SUFFIX = '_f'.freeze
   # convert ${FILE_PATH}/${IMG_NAME} -crop $CROP_GEO -colorspace gray -lat 10x10+5% -negate ${FILE_PATH}/${CROP_FILENAME}
   def initialize(hash)
+    @file_suffix = hash[:suffix] || '_c'
     @width = hash[:w] || 0
     @height = hash[:h] || 0
 
@@ -13,7 +13,7 @@ class Convert
     @in_filename = hash[:in_filename]
 
     @fileop = FileOp.new(@in_filename)
-    @out_fileop = @fileop.name_suffix(OUT_FILE_SUFFIX)
+    @out_fileop = @fileop.name_suffix(@file_suffix)
 
     @height_offset -= @bottom_offset
   end
