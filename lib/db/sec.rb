@@ -4,7 +4,7 @@ class Sec < Sequel::Model
 
   class << self
     def sel
-      select(:rowid, :gid, :filename, :ocr, :normalized :ready, :posted)
+      select(:rowid, :gid, :filename, :ocr, :normalized, :ready, :posted)
     end
   end
 end
