@@ -11,8 +11,8 @@ class FileOp
     "#{FILE_PATH}/#{@filename}"
   end
 
-  def crop_path
-    String.new(path).insert(path.index('.'), '_c')
+  def path_suffix(suffix)
+    String.new(path).insert(path.index('.'), suffix)
   end
 
   def delete
