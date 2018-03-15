@@ -1,7 +1,7 @@
 require 'file/file_op'
-
+# Import operation
+# import -window $WINDOW_ID -resize $RESIZE_ARG ${FILE_PATH}/${IMG_NAME}
 class Import
-  #import -window $WINDOW_ID -resize $RESIZE_ARG ${FILE_PATH}/${IMG_NAME}
   WINDOW_ID = ENV['WINDOW_ID']
   W = ENV['IMP_WIDTH']
   H = ENV['IMP_HEIGHT']
@@ -15,7 +15,7 @@ class Import
 
   def import
     LOG.info "Import to #{filepath}" if LOG
-    %x[import -window #{@window_id} -resize #{resize_arg} #{filepath}]
+    `import -window #{@window_id} -resize #{resize_arg} #{filepath}`
   end
 
   def resize_arg
