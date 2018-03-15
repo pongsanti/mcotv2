@@ -4,10 +4,10 @@ require 'file/file_op'
 class Post
   URL = ENV['POST_URL']
   
-  def initialize(value, filepath, cropfilepath)
+  def initialize(value, filename)
     @value = value
-    @filepath = filepath
-    @cropfilepath = cropfilepath
+    @file_op = FileOp.new(filename)
+    @cropfile_op = @file_op.name_suffix('_c')
   end
 
   def post
@@ -16,8 +16,8 @@ class Post
     begin
       RestClient.post(URL,
         article: { text: @value,
-                   file: File.new(@filepath, 'rb'),
-                   crop_file: File.new(@cropfilepath, 'rb') }
+                   file: File.new(@file_op.path, 'rb'),
+                   crop_file: File.new(@cropfile_op.path, 'rb') }
       )
       LOG.info "Posted to the server."
     rescue StandardError => err

@@ -31,8 +31,8 @@ def batch_process(fs)
   f
 end
 
-def post(value, filepath, cropfilepath)
-  Post.new(value, filepath, cropfilepath).post
+def post(value, filename)
+  Post.new(value, filename).post
 end
 
 def update_posted(f)
@@ -82,7 +82,7 @@ loop do
     if last_match_change
       LOG.info 'processing batch...'
       f = batch_process(fs)
-      post(f.normalized, fop.path, crop_fop.path) && update_flag(fs)
+      post(f.normalized, f.filename) && update_flag(fs)
       LOG.info 'processing batch done.'
       fs = []
     end
@@ -93,5 +93,5 @@ loop do
   batch_process(fs) unless fs.empty?
 
   puts '--'
-  sleep 5
+  sleep 2
 end
