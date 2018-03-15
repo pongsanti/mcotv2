@@ -11,12 +11,16 @@ class Import
     @width = width || W
     @height = height || H
     @filename = filename || FileOp.current_filename
+    
+    @fileop = FileOp.new(@filename)
   end
 
   def import
     LOG.info "Import to #{filepath}" if LOG
     `import -window #{@window_id} -resize #{resize_arg} #{filepath}`
-    @filename
+    # put date into image
+    `convert #{filepath} -fill white -undercolor '#00000080' -gravity SouthEast -annotate +0+5 "$(date)" #{filepath}`
+    @fileop
   end
 
   def resize_arg
@@ -24,6 +28,6 @@ class Import
   end
 
   def filepath
-    FileOp.new(@filename).path
+    @fileop.path
   end
 end
