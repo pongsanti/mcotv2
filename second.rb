@@ -43,7 +43,7 @@ end
 def update_flag(fs)
   fs.each do |f|
     update_posted(f)
-  end  
+  end
 end
 
 loop do
@@ -56,13 +56,13 @@ loop do
     # crop
     LOG.info "Cropping image: #{fop.path}"
     c = Convert.new(w: S_C_W, h: F_C_H,
-      wo: F_C_WO, ho: F_C_HO,
-      bo: C_BOT_OFF,
-      in_filename: fop.filename)
+                    wo: F_C_WO, ho: F_C_HO,
+                    bo: C_BOT_OFF,
+                    in_filename: fop.filename)
     crop_fop = c.convert
 
     # ocr
-    text = Ocr.new(crop_fop).parse    
+    text = Ocr.new(crop_fop).parse
     if SET_MATCHER =~ text
       LOG.info 'match SET!!'
       f.ocr = text
@@ -73,19 +73,16 @@ loop do
       f.ocr = text
       fs << f
       current_match = SET50
-    else     
+    else
       current_match = NOMATCH
       update_posted(f)
     end
 
-    last_match_change = last_match && last_match != current_match && 
-      (last_match != NOMATCH)
+    last_match_change = last_match && last_match != current_match && last_match != NOMATCH
     if last_match_change
       LOG.info 'processing batch...'
       f = batch_process(fs)
-      if post(f.normalized, fop.path, crop_fop.path)
-        update_flag(fs)
-      end
+      post(f.normalized, fop.path, crop_fop.path) && update_flag(fs)
       LOG.info 'processing batch done.'
       fs = []
     end
