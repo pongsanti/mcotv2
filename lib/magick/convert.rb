@@ -13,17 +13,23 @@ class Convert
     @in_filename = hash[:in_filename]
 
     @fileop = FileOp.new(@in_filename)
+    @out_file = @fileop.path_suffix(OUT_FILE_SUFFIX)
     @height_offset -= @bottom_offset
   end
 
   def convert
-    out_file = @fileop.path_suffix(OUT_FILE_SUFFIX)
-    LOG.info "Convert to #{out_file}"
-    `convert #{@fileop.path} -crop #{geometry} -colorspace gray -lat 10x10+5% -negate #{out_file}`
-    out_file
+    
+    LOG.info "Convert to #{@out_file}"
+    `convert #{@fileop.path} -crop #{geometry} -colorspace gray -lat 10x10+5% -negate #{@out_file}`
+    @out_file
   end
 
   def geometry
     "#{@width}x#{@height}+#{@width_offset}+#{@height_offset}"
+  end
+
+  def white?
+    w = `convert #{@out_file} -threshold 65534 -format "%[fx:100*image.mean]" info:`
+    w.strip.to_i > 85
   end
 end
