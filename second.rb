@@ -92,6 +92,6 @@ loop do
 
   batch_process(fs) unless fs.empty?
 
-  puts '--'
+  LOG.info '--'
   sleep 2
 end

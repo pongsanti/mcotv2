@@ -44,7 +44,7 @@ loop do
   end
 
   crop_fop.delete
-  puts '--'
+  LOG.info '--'
 
   sleep 0.5
 

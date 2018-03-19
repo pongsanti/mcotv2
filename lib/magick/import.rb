@@ -2,7 +2,6 @@ require 'file/file_op'
 # Import operation
 # import -window $WINDOW_ID -resize $RESIZE_ARG ${FILE_PATH}/${IMG_NAME}
 class Import
-  WINDOW_ID = ENV['WINDOW_ID']
   W = ENV['IMP_WIDTH']
   H = ENV['IMP_HEIGHT']
 
@@ -11,7 +10,7 @@ class Import
     @width = width || W
     @height = height || H
     @filename = filename || FileOp.current_filename
-    
+
     @fileop = FileOp.new(@filename)
   end
 
