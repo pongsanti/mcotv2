@@ -11,6 +11,7 @@ require 'tesseract/ocr'
 LOG = Logger.new('first.log', 10, 1_024_000)
 
 WINDOW_ID = `cat windowid/vlcwindow.id`.strip
+LOG.info '---'
 LOG.info "Window ID: #{WINDOW_ID}"
 
 F_C_W = ENV['F_C_W']
@@ -47,5 +48,4 @@ loop do
   LOG.info '--'
 
   sleep 0.5
-
 end

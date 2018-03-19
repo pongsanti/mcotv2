@@ -11,6 +11,7 @@ require 'post_process/post_processor'
 require 'rest/post'
 
 LOG = Logger.new('second.log', 10, 1_024_000)
+LOG.info '-'
 
 S_C_W = ENV['S_C_W']
 F_C_H = ENV['F_C_H']
@@ -85,6 +86,7 @@ loop do
       post(f.normalized, f.filename) && update_flag(fs)
       LOG.info 'processing batch done.'
       fs = []
+      LOG.info '--'
     end
 
     last_match = current_match
@@ -92,6 +94,6 @@ loop do
 
   batch_process(fs) unless fs.empty?
 
-  LOG.info '--'
+  LOG.info '---'
   sleep 2
 end

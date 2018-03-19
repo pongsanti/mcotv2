@@ -3,4 +3,4 @@
 *.db
 *.pid
 *.id
-*.log
+*.log*
