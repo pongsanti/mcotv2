@@ -9,6 +9,8 @@ require 'magick/convert'
 require 'tesseract/ocr'
 
 LOG = Logger.new(STDOUT)
+WINDOW_ID = `cat windowid/vlcwindow.id`.strip
+LOG.info "Window ID: #{WINDOW_ID}"
 
 F_C_W = ENV['F_C_W']
 F_C_H = ENV['F_C_H']
