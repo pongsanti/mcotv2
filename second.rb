@@ -10,7 +10,7 @@ require 'post_process/group_processor'
 require 'post_process/post_processor'
 require 'rest/post'
 
-LOG = Logger.new(STDOUT)
+LOG = Logger.new('second.log', 10, 1_024_000)
 
 S_C_W = ENV['S_C_W']
 F_C_H = ENV['F_C_H']

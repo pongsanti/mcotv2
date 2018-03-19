@@ -8,7 +8,8 @@ require 'magick/import'
 require 'magick/convert'
 require 'tesseract/ocr'
 
-LOG = Logger.new(STDOUT)
+LOG = Logger.new('first.log', 10, 1_024_000)
+
 WINDOW_ID = `cat windowid/vlcwindow.id`.strip
 LOG.info "Window ID: #{WINDOW_ID}"
 
@@ -46,4 +47,5 @@ loop do
   puts '--'
 
   sleep 0.5
+
 end
