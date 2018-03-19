@@ -8,7 +8,7 @@ require 'magick/import'
 require 'magick/convert'
 require 'tesseract/ocr'
 
-LOG = Logger.new(STDOUT)
+LOG = Logger.new('first.log', 10, 1_024_000)
 
 F_C_W = ENV['F_C_W']
 F_C_H = ENV['F_C_H']
@@ -44,4 +44,5 @@ loop do
   puts '--'
 
   sleep 0.5
+  
 end
