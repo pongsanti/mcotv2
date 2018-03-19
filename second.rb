@@ -47,53 +47,59 @@ def update_flag(fs)
   end
 end
 
-loop do
-  last_match = nil
-  current_match = nil
-  fs = []
+begin
+  loop do
+    last_match = nil
+    current_match = nil
+    fs = []
 
-  First.not_posted.all do |f|
-    fop = FileOp.new(f.filename)
-    # crop
-    LOG.info "Cropping image: #{fop.path}"
-    c = Convert.new(w: S_C_W, h: F_C_H,
-                    wo: F_C_WO, ho: F_C_HO,
-                    bo: C_BOT_OFF,
-                    in_filename: fop.filename)
-    crop_fop = c.convert
+    First.not_posted.all do |f|
+      fop = FileOp.new(f.filename)
+      # crop
+      LOG.info "Cropping image: #{fop.path}"
+      c = Convert.new(w: S_C_W, h: F_C_H,
+                      wo: F_C_WO, ho: F_C_HO,
+                      bo: C_BOT_OFF,
+                      in_filename: fop.filename)
+      crop_fop = c.convert
 
-    # ocr
-    text = Ocr.new(crop_fop).parse
-    if SET_MATCHER =~ text
-      LOG.info 'match SET!!'
-      f.ocr = text
-      fs << f
-      current_match = SET
-    elsif SET50_MATCHER =~ text
-      LOG.info 'match SET50!!'
-      f.ocr = text
-      fs << f
-      current_match = SET50
-    else
-      current_match = NOMATCH
-      update_posted(f)
+      # ocr
+      text = Ocr.new(crop_fop).parse
+      if SET_MATCHER =~ text
+        LOG.info 'match SET!!'
+        f.ocr = text
+        fs << f
+        current_match = SET
+      elsif SET50_MATCHER =~ text
+        LOG.info 'match SET50!!'
+        f.ocr = text
+        fs << f
+        current_match = SET50
+      else
+        current_match = NOMATCH
+        update_posted(f)
+      end
+
+      last_match_change = last_match && last_match != current_match && last_match != NOMATCH
+      if last_match_change
+        LOG.info 'processing batch...'
+        f = batch_process(fs)
+        post(f.normalized, f.filename) && update_flag(fs)
+        LOG.info 'processing batch done.'
+        fs = []
+        LOG.info '--'
+      end
+
+      last_match = current_match
     end
 
-    last_match_change = last_match && last_match != current_match && last_match != NOMATCH
-    if last_match_change
-      LOG.info 'processing batch...'
-      f = batch_process(fs)
-      post(f.normalized, f.filename) && update_flag(fs)
-      LOG.info 'processing batch done.'
-      fs = []
-      LOG.info '--'
-    end
+    batch_process(fs) unless fs.empty?
 
-    last_match = current_match
+    LOG.info '---'
+    sleep 2
   end
-
-  batch_process(fs) unless fs.empty?
-
-  LOG.info '---'
-  sleep 2
+rescue SignalException => e
+  LOG.info e
+  LOG.info('Terminating...')
+  raise e
 end
