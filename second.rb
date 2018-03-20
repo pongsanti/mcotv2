@@ -47,6 +47,17 @@ def update_flag(fs)
   end
 end
 
+def process_batch_and_update_flags(fs)
+  return if fs.empty?
+
+  LOG.info 'processing batch...'
+  fs.each { |f| LOG.info "\t#{f.filename}" }
+  f = batch_process(fs)
+  post(f.normalized, f.filename) && update_flag(fs)
+  LOG.info 'processing batch done.'
+  LOG.info '--'
+end
+
 begin
   loop do
     last_match = nil
@@ -62,34 +73,35 @@ begin
                       bo: C_BOT_OFF,
                       in_filename: fop.filename)
       crop_fop = c.convert
-
       # ocr
       text = Ocr.new(crop_fop).parse
+
       if SET_MATCHER =~ text
         LOG.info 'match SET!!'
         f.ocr = text
-        fs << f
         current_match = SET
       elsif SET50_MATCHER =~ text
         LOG.info 'match SET50!!'
         f.ocr = text
-        fs << f
         current_match = SET50
       else
+        LOG.info 'No match!!'
         current_match = NOMATCH
         update_posted(f)
       end
 
-      last_match_change = last_match && last_match != current_match && last_match != NOMATCH
-      if last_match_change
-        LOG.info 'processing batch...'
-        f = batch_process(fs)
-        post(f.normalized, f.filename) && update_flag(fs)
-        LOG.info 'processing batch done.'
+      last_match_change = last_match && last_match != current_match
+      if last_match_change && !fs.empty?
+        # process fs and clear fs
+        process_batch_and_update_flags(fs)
         fs = []
         LOG.info '--'
       end
 
+      # keep collecting f if matched
+      fs << f unless current_match == NOMATCH
+      LOG.info "Current files set: #{fs.map(&:filename).join('|')}"
+      # set last_match
       last_match = current_match
     end
 
