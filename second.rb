@@ -88,6 +88,9 @@ begin
         LOG.info 'No match!!'
         current_match = NOMATCH
         update_posted(f)
+        # delete not matched
+        fop.delete
+        crop_fop.delete
       end
 
       last_match_change = last_match && last_match != current_match
